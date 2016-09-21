@@ -1,3 +1,5 @@
+let mapleader=','
+
 set nu
 syntax on
 
@@ -104,6 +106,9 @@ Plugin 'gmarik/Vundle.vim'
 
 Plugin 'scrooloose/nerdtree'
 
+Plugin 'fatih/vim-go'
+"Plugin 'dgryski/vim-godef'
+
 "Plugin 'Valloric/YouCompleteMe'
 
 "lua check
@@ -121,7 +126,7 @@ Plugin 'AutoComplPop'
 Plugin 'SuperTab'
 
 Plugin 'vim-scripts/a.vim'
-Plugin 'vim-scripts/taglist.vim'
+"Plugin 'vim-scripts/taglist.vim'
 
 
 "md
@@ -148,13 +153,15 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 
 "nerdtree
-map <C-n> :NERDTree<CR>
+map <leader>n :NERDTree<CR>
 autocmd vimenter * NERDTree
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-autocmd BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}   set filetype=mkd 
-autocmd BufRead,BufNewFile *.{py,pyc}   set filetype=py
+"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+"autocmd BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}   set filetype=mkd 
+autocmd BufRead,BufNewFile *.{go}   set filetype=go 
+"autocmd BufRead,BufNewFile *.{py,pyc}   set filetype=py
 
 "autocomplPop配置
 let g:AutoComplPop_IgnoreCaseOption=1
@@ -164,55 +171,29 @@ let g:AutoComplPop_IgnoreCaseOption=1
 "let g:SuperTabDefaultCompletionType="<C-X><C-O>" 
 
 "TlistToggle
-let Tlist_Show_One_File=1
+"let Tlist_Show_One_File=1
 let Tlist_Exit_OnlyWindow=1
 let Tlist_Use_Right_Window=1
 
-"compile
-func CompileRun()
-exec "w"
-"C程序
-if &filetype == "c"
-exec "!gcc -Wall -enable-auto-import % -g -o %<.exe"
-"c++程序
-elseif &filetype == "cpp"
-exec "!g++ -Wall -enable-auto-import  % -g -o %<.exe"
-"Java程序
-elseif &filetype == "java"
-exec "!javac %"
-elseif &filetype == "py"
-exec "!python %<.py"
-endif
-endfunc
-"结束定义CompileRun
-"定义Run函数
-func Run()
-if &filetype == "c" || &filetype == "cpp"
-exec "!%<.exe"
-elseif &filetype == "java"
-exec "!java %<"
-elseif &filetype == "py"
-exec "!python %<.py"
-endif
-endfunc
-"定义Debug函数，用来调试程序
-func Debug()
-exec "w"
-"C程序
-if &filetype == "c"
-exec "!gcc % -g -o %<.exe"
-exec "!gdb %<.exe"
-elseif &filetype == "cpp"
-exec "!g++ % -g -o %<.exe"
-exec "!gdb %<.exe"
-"Java程序
-elseif &filetype == "java"
-exec "!javac %"
-exec "!jdb %<"
-endif
-endfunc
-"结束定义Debug
-"设置程序的运行和调试的快捷键F5和Ctrl-F5
-map <F5> :call CompileRun()<CR>
-map <F6> :call Run()<CR>
-map <C-F5> :call Debug()<CR>
+
+" Highlight for go
+let g:go_disable_autoinstall = 0
+let g:go_highlight_functions = 1  
+let g:go_highlight_methods = 1  
+let g:go_highlight_structs = 1  
+let g:go_highlight_operators = 1  
+let g:go_highlight_build_constraints = 1 
+
+au FileType go nmap <Leader>s <Plug>(go-implements)
+au FileType go nmap <Leader>i <Plug>(go-info)
+au FileType go nmap <Leader>gd <Plug>(go-doc)
+au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
+au FileType go nmap <leader>r <Plug>(go-run)
+au FileType go nmap <leader>b <Plug>(go-build)
+au FileType go nmap <leader>t <Plug>(go-test)
+au FileType go nmap <leader>c <Plug>(go-coverage)
+au FileType go nmap <Leader>ds <Plug>(go-def-split)
+au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
+au FileType go nmap <Leader>dt <Plug>(go-def-tab)
+au FileType go nmap <Leader>e <Plug>(go-rename)
+
