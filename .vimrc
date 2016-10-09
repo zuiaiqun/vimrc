@@ -28,6 +28,8 @@ if has('mouse')
 endif
 
 set laststatus=2
+"状态栏设置:文件名、当前列、当前相对位置
+set statusline=%F%m%r%h%w\ [COL=%03v][%p%%]
 set nocompatible
 set autochdir
 
